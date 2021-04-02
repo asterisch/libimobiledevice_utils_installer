@@ -37,8 +37,8 @@ then
 	passwd -l usbmux &>/dev/null
 fi
 
-
-if [ `idevicerestore -h 2>/dev/null; echo $?` -ne 0 ];
+idevicerestore -h 2>&1 >/dev/null
+if [ $? -ne 0 ];
 then
 
 	git clone https://github.com/libimobiledevice/libirecovery
@@ -48,13 +48,15 @@ then
 	cd idevicerestore && ./autogen.sh && make && make install && cd ..
 fi
 
-if [ `idevicerestore -h 2>/dev/null; echo $?` -ne 0 ];
+idevicerestore -h  2>&1 >/dev/null
+if [ $? -ne 0 ];
 then
 	git clone https://github.com/libimobiledevice/ideviceinstaller
 	cd ideviceinstaller && ./autogen.sh && make && make install && cd ..
 fi
 
-if [ `ideviceactivation -h 2>/dev/null; echo $?` -ne 0 ];
+ideviceactivation -h 2>&1  >/dev/null 
+if [ $? -ne 0 ];
 then
 	git clone https://github.com/libimobiledevice/libideviceactivation
 	cd libideviceactivation && ./autogen.sh && make && make install && cd ..
