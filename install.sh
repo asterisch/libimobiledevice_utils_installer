@@ -37,18 +37,21 @@ then
 	passwd -l usbmux &>/dev/null
 fi
 
-idevicerestore -h 2>&1 >/dev/null
+irecovery -h 2>&1 >/dev/null
 if [ $? -ne 0 ];
 then
-
 	git clone https://github.com/libimobiledevice/libirecovery
 	cd libirecovery && ./autogen.sh && make && make install && cd ..
+fi
 
+idevicerestore -h  2>&1 >/dev/null
+if [ $? -ne 0 ];
+then
 	git clone https://github.com/libimobiledevice/idevicerestore
 	cd idevicerestore && ./autogen.sh && make && make install && cd ..
 fi
 
-idevicerestore -h  2>&1 >/dev/null
+ideviceinstaller -h  2>&1 >/dev/null
 if [ $? -ne 0 ];
 then
 	git clone https://github.com/libimobiledevice/ideviceinstaller
@@ -63,5 +66,7 @@ then
 fi
 
 echo /usr/local/lib |  tee /etc/ld.so.conf.d/libimobiledevice-libs.conf
- ldconfig
+
+ldconfig
+
 echo 'Hopefully all done. Please reboot!'
