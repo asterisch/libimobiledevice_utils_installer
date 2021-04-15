@@ -30,13 +30,20 @@ cp -r ${CHECKRAIN_BIN} ${INSTALL_DIR}
 cat << EOF > ${INSTALL_DIR}/startup.sh
 #!/bin/bash
 
-echo "PiRa1n: Waiting for an iDevice..."
 while true; do
     # Enter recovery mode if iDevice is connected
-    if idevice_id -l > /dev/null 2>&1 && [[ -n \$(idevice_id -l) ]]; then
-		echo "PiRa1n: Entering recovery mode..."
-		ideviceenterrecovery "\$(idevice_id -l)"
-		sleep 4
+    if idevice_id -l > /dev/null 2>&1; then
+    	echo "PiRa1n: Waiting for an iDevice..."
+	if ! [ -z "\$(idevicepair pair | grep SUCCESS)" ] ;then
+		echo "PiRa1n: Paired with iDevice..."
+		if [[ -z "\$(ideviceinstaller -l -o list_system | grep -i checkra1n)" ]]; then
+			echo "PiRa1n: Entering recovery mode..."
+			ideviceenterrecovery "\$(idevice_id -l)"
+		else
+			echo "PiRa1n: Already checkra1n'ed... Enjoy ;)"
+			sleep 4
+		fi
+	fi
     # Check if iDevice is in recovery mode
     elif lsusb | grep -q 'Recovery'; then
 		echo "PiRa1n: iDevice is in recovery mode."
@@ -47,12 +54,12 @@ while true; do
     # Check if iDevice is in DFU mode
     elif lsusb | grep -q 'DFU'; then
     	echo "PiRa1n: iDevice is in DFU mode."
-		sudo pkill -9 ${CHECKRAIN_BIN}
-		sleep 2
-		${INSTALL_DIR}/${CHECKRAIN_BIN} -c
+	killall -9 ${CHECKRAIN_BIN}
+	sleep 2
+	${INSTALL_DIR}/${CHECKRAIN_BIN} -c -E
     else
-      sleep 1
-	fi
+      sleep 2
+    fi
 done
 EOF
 
@@ -76,7 +83,9 @@ chmod +x ${INSTALL_DIR}/startup.sh
 chmod 644 /etc/systemd/system/piRa1n.service
 
 # Enable service
+systemctl stop piRa1n.service
 systemctl daemon-reload
 systemctl enable piRa1n.service
 systemctl start piRa1n.service
+systemctl restart piRa1n.service
 systemctl status piRa1n
