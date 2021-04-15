@@ -1,3 +1,5 @@
+# DONT USE THIS :) USE: "../install.sh" INSTEAD
+
 1. 
 	download checkra1n arm 
 
