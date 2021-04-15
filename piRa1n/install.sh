@@ -54,9 +54,8 @@ while true; do
     # Check if iDevice is in DFU mode
     elif lsusb | grep -q 'DFU'; then
     	echo "PiRa1n: iDevice is in DFU mode."
-	killall -9 ${CHECKRAIN_BIN}
-	sleep 2
 	${INSTALL_DIR}/${CHECKRAIN_BIN} -c -E
+	sleep 4
     else
       sleep 2
     fi
