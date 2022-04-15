@@ -33,13 +33,14 @@ echo "PiRa1n: Waiting for an iDevice..."
 while true; do
     # Enter recovery mode if iDevice is connected
     if idevice_id -l > /dev/null 2>&1; then
-	if ! [ -z "\$(idevicepair pair | grep SUCCESS)" ] ;then
-		echo "PiRa1n: Paired with iDevice..."
-		if [[ ! -z "\$(ideviceinstaller -l -o list_system | grep -i checkra1n)" ]]; then
-			echo "PiRa1n: Already checkra1n'ed... Enjoy ;)"
-		fi
-		sleep 4
-	fi
+        if ! [ -z "\$(idevicepair pair | grep SUCCESS)" ] ;then
+            echo "PiRa1n: Paired with iDevice..."
+            if [[ ! -z "\$(ideviceinstaller -l -o list_system | grep -i checkra1n)" ]]; then
+                echo "PiRa1n: Already checkra1n'ed... Enjoy ;)"
+            fi
+            sleep 4
+        fi
+    fi
     # Check if iDevice is in recovery mode
     if lsusb | grep -q 'Recovery'; then
 	echo "PiRa1n: iDevice is in recovery mode."
